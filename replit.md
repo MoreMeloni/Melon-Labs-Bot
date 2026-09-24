@@ -1,15 +1,19 @@
-# [Project name]
+# Discord Ping Bot
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A discord.js bot that connects to Discord and responds to the `/ping` slash command.
 
 ## Run & Operate
 
 - `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
+- `pnpm --filter @workspace/discord-bot start` — run the Discord bot
+- `pnpm --filter @workspace/discord-bot typecheck` — typecheck the bot
 - `pnpm run typecheck` — full typecheck across all packages
 - `pnpm run build` — typecheck + build all packages
 - `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
 - `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
 - Required env: `DATABASE_URL` — Postgres connection string
+- Required secret for the bot: `DISCORD_TOKEN`
+- Optional non-secret bot env: `DISCORD_GUILD_ID` for immediate command updates in a test server
 
 ## Stack
 
@@ -19,18 +23,20 @@ _Replace the heading above with the project's name, and this line with one sente
 - Validation: Zod (`zod/v4`), `drizzle-zod`
 - API codegen: Orval (from OpenAPI spec)
 - Build: esbuild (CJS bundle)
+- Discord bot: Node.js, TypeScript, discord.js 14
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `services/discord-bot/src/index.ts` — Discord client, slash command registration, and `/ping` interaction
+- `services/discord-bot/README.md` — Discord application and server setup
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- Slash commands register globally by default; set `DISCORD_GUILD_ID` to register only in a development server while iterating.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+- `/ping` replies with `Pong!`.
 
 ## User preferences
 
