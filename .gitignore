@@ -47,3 +47,7 @@ Thumbs.db
 # Replit
 .cache/
 .local/
+
+# Discord bot's per-server ticket settings
+/services/discord-bot/data/ticket-config.json
+/services/discord-bot/data/ticket-config.json.*.tmp

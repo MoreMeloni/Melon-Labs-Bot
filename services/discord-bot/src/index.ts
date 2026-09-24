@@ -1,4 +1,5 @@
 import {
+  ApplicationCommandType,
   Client,
   Events,
   GatewayIntentBits,
@@ -6,6 +7,11 @@ import {
   Routes,
   SlashCommandBuilder,
 } from "discord.js";
+import {
+  handleTicketButton,
+  handleTicketCommand,
+} from "./tickets/handler.js";
+import { ticketCommand } from "./tickets/commands.js";
 
 const token = process.env.DISCORD_TOKEN;
 
@@ -16,6 +22,8 @@ if (!token) {
 const pingCommand = new SlashCommandBuilder()
   .setName("ping")
   .setDescription("Check whether the bot is online.");
+
+const applicationCommands = [pingCommand, ticketCommand];
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds],
@@ -34,41 +42,66 @@ client.once(Events.ClientReady, async (readyClient) => {
       name: string;
       type: number;
     }[];
-    const existingPing = existingCommands.find(
-      (command) => command.name === pingCommand.name && command.type === 1,
-    );
 
-    if (existingPing) {
-      const updateRoute = guildId
-        ? Routes.applicationGuildCommand(
-            readyClient.user.id,
-            guildId,
-            existingPing.id,
-          )
-        : Routes.applicationCommand(readyClient.user.id, existingPing.id);
-      await rest.patch(updateRoute, { body: pingCommand.toJSON() });
-    } else {
-      await rest.post(commandRoute, { body: pingCommand.toJSON() });
+    for (const command of applicationCommands) {
+      const commandData = command.toJSON();
+      const existingCommand = existingCommands.find(
+        (registered) =>
+          registered.name === commandData.name &&
+          registered.type === ApplicationCommandType.ChatInput,
+      );
+
+      if (existingCommand) {
+        const updateRoute = guildId
+          ? Routes.applicationGuildCommand(
+              readyClient.user.id,
+              guildId,
+              existingCommand.id,
+            )
+          : Routes.applicationCommand(readyClient.user.id, existingCommand.id);
+        await rest.patch(updateRoute, { body: commandData });
+      } else {
+        await rest.post(commandRoute, { body: commandData });
+      }
     }
 
     console.info(
-      `Connected as ${readyClient.user.tag}; /ping is registered ${
+      `Connected as ${readyClient.user.tag}; /ping and /ticket are registered ${
         guildId ? "for the development server" : "globally"
       }.`,
     );
   } catch (error) {
-    console.error("Could not register the /ping command:", error);
+    console.error("Could not register Discord slash commands:", error);
     await client.destroy();
     process.exitCode = 1;
   }
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
-  if (!interaction.isChatInputCommand() || interaction.commandName !== "ping") {
-    return;
-  }
+  try {
+    if (interaction.isChatInputCommand()) {
+      if (interaction.commandName === "ping") {
+        await interaction.reply("Pong!");
+        return;
+      }
+      if (interaction.commandName === "ticket") {
+        await handleTicketCommand(interaction);
+      }
+      return;
+    }
 
-  await interaction.reply("Pong!");
+    if (interaction.isButton()) {
+      await handleTicketButton(interaction);
+    }
+  } catch (error) {
+    console.error("Could not process Discord interaction:", error);
+    if (interaction.isRepliable() && !interaction.replied && !interaction.deferred) {
+      await interaction.reply({
+        content: "Something went wrong while handling that interaction.",
+        ephemeral: true,
+      });
+    }
+  }
 });
 
 client.login(token).catch((error: unknown) => {

@@ -1,6 +1,6 @@
-# Discord Ping Bot
+# Discord Bot
 
-A discord.js bot that connects to Discord and responds to the `/ping` slash command.
+A discord.js bot with `/ping` and a private, slash-command-configured ticket system.
 
 ## Run & Operate
 
@@ -14,6 +14,7 @@ A discord.js bot that connects to Discord and responds to the `/ping` slash comm
 - Required env: `DATABASE_URL` — Postgres connection string
 - Required secret for the bot: `DISCORD_TOKEN`
 - Optional non-secret bot env: `DISCORD_GUILD_ID` for immediate command updates in a test server
+- Optional non-secret bot env: `TICKET_CONFIG_PATH` to change where per-server ticket settings are stored
 
 ## Stack
 
@@ -28,15 +29,17 @@ A discord.js bot that connects to Discord and responds to the `/ping` slash comm
 ## Where things live
 
 - `services/discord-bot/src/index.ts` — Discord client, slash command registration, and `/ping` interaction
-- `services/discord-bot/README.md` — Discord application and server setup
+- `services/discord-bot/src/tickets/` — ticket commands, interaction handling, and persisted server settings
+- `services/discord-bot/README.md` — Discord application and ticket setup
 
 ## Architecture decisions
 
 - Slash commands register globally by default; set `DISCORD_GUILD_ID` to register only in a development server while iterating.
+- Ticket settings persist per server in a local JSON file; do not commit runtime configuration.
 
 ## Product
 
-- `/ping` replies with `Pong!`.
+- `/ping` replies with `Pong!`; `/ticket` configures private tickets, posts a button panel, manages access, closes tickets, and logs creation and closure.
 
 ## User preferences
 

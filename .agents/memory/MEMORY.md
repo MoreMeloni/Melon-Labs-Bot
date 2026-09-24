@@ -1,0 +1,1 @@
+- [Discord command registration](discord-command-registration.md) — upsert managed commands individually to preserve commands owned elsewhere.
