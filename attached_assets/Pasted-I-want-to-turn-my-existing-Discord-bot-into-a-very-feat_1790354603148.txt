@@ -1,0 +1,1149 @@
+I want to turn my existing Discord bot into a very feature-rich all-in-one Discord bot.
+
+IMPORTANT:
+- DO NOT rewrite the entire project from scratch.
+- Keep the existing architecture and existing working features.
+- Keep /ping working.
+- Keep the existing ticket system and its current commands.
+- Improve existing systems instead of duplicating them.
+- Make everything modular and maintainable.
+- Use TypeScript and discord.js as already used by the project.
+- Never expose or hardcode the Discord bot token.
+- Store secrets only in environment variables / Replit Secrets.
+- Make the bot safe to reinstall, invite to new servers, and configure from scratch.
+- If a feature requires an external API key, make it optional and disabled until configured.
+- If an external API is unavailable, the bot should still start normally.
+- Run type checking after changes and fix all TypeScript errors.
+
+==================================================
+1. BOT CORE / INSTALLATION
+==================================================
+
+Create a proper setup system so the bot can be installed on a completely new Discord server.
+
+Add:
+
+/setup
+/setup status
+/setup wizard
+/setup reset
+/config
+/config view
+/config reset
+
+The setup wizard should guide the server owner through:
+
+- Main bot settings
+- Log channel
+- Moderation log channel
+- Member log channel
+- Message log channel
+- Ticket category
+- Ticket log channel
+- Transcript channel
+- Staff roles
+- Moderator roles
+- Admin roles
+- Welcome channel
+- Leave channel
+- Verification channel
+- Application category
+- Giveaway channel
+- Suggestion channel
+- Report channel
+- Starboard channel
+- Auto-role
+- Level/XP channel
+- AI channel
+- Command permissions
+
+Make setup survive bot restarts.
+
+Every guild must have its own configuration.
+
+If the bot is installed on another server, that server must get its own completely separate configuration.
+
+Add automatic configuration migration for old configurations.
+
+==================================================
+2. PERMISSION SYSTEM
+==================================================
+
+Create a proper permission system.
+
+Support:
+
+- Owner
+- Administrator
+- Moderator
+- Support
+- Staff
+- Custom roles
+
+Allow commands to have configurable required permissions.
+
+Add:
+
+/permissions
+/permissions set
+/permissions reset
+/permissions view
+
+Allow server owners to assign which roles can use:
+
+- Moderation
+- Tickets
+- Giveaways
+- Applications
+- Logging
+- Economy
+- AI
+- Music
+- Voice
+- Configuration
+
+Never allow normal users to access administrative commands.
+
+==================================================
+3. AI / ASK THE BOT
+==================================================
+
+Add an optional AI assistant.
+
+Users should be able to ask the bot questions.
+
+Commands:
+
+/ask
+/ai
+/ask-about
+/ai help
+
+Example:
+
+User:
+"How do I open a ticket?"
+
+Bot:
+"Click the ticket button in #support..."
+
+The bot should be able to answer:
+
+- Discord questions
+- Server questions
+- Questions about the bot
+- General knowledge questions
+- Help questions
+- FAQ questions
+- Server rules
+- Ticket questions
+- Staff questions
+- Commands
+- How-to questions
+
+Add an AI channel mode where the bot can automatically answer messages in one configured channel.
+
+Example:
+
+#ask-ai
+
+User:
+"What commands can I use?"
+
+Bot:
+"Here are the commands available to you..."
+
+The bot should NOT respond to every message in every channel.
+
+Only respond automatically when:
+- Mentioned
+- Used with /ask
+- In the configured AI channel
+- Explicitly enabled by the server owner
+
+Add conversation memory per channel/user with limits.
+
+Add:
+
+/ai enable
+/ai disable
+/ai channel
+/ai model
+/ai reset
+/ai status
+
+Add cooldowns and rate limits.
+
+If no AI API key is configured, show a useful setup message instead of crashing.
+
+==================================================
+4. ADVANCED TICKET SYSTEM
+==================================================
+
+Keep and heavily improve the existing ticket system.
+
+Features:
+
+- Ticket panel
+- Multiple ticket types
+- Multiple support roles
+- Custom categories
+- Custom buttons
+- Custom emojis
+- Custom embeds
+- Custom colors
+- Images
+- Thumbnails
+- Footers
+- Welcome messages
+- Closing messages
+- Ticket numbers
+- Username in ticket names
+- Ticket limits
+- Cooldowns
+- Auto-delete
+- Transcripts
+- Detailed logs
+
+Ticket controls:
+
+- Claim
+- Unclaim
+- Close
+- Reopen
+- Delete
+- Add member
+- Remove member
+- Rename
+- Transcript
+- Lock
+- Unlock
+
+Commands:
+
+/ticket setup
+/ticket panel
+/ticket open
+/ticket close
+/ticket reopen
+/ticket delete
+/ticket claim
+/ticket unclaim
+/ticket add
+/ticket remove
+/ticket rename
+/ticket transcript
+/ticket stats
+
+Ticket types:
+
+- Support
+- General
+- Bug Report
+- Player Report
+- Partnership
+- Staff Application
+- Developer Application
+- Purchase Help
+- Appeal
+- Custom
+
+Make ticket types configurable.
+
+==================================================
+5. MODERATION
+==================================================
+
+Create a full moderation system.
+
+Commands:
+
+/ban
+/unban
+/kick
+/timeout
+/untimeout
+/warn
+/unwarn
+/warnings
+/clear
+/slowmode
+/lock
+/unlock
+/nick
+/role
+/softban
+
+Add moderation logs.
+
+Warn system:
+
+- Warning reason
+- Moderator
+- Date
+- User
+- Warning ID
+- Automatic punishment thresholds
+
+Example:
+
+3 warnings = timeout
+5 warnings = kick
+7 warnings = ban
+
+Make thresholds configurable.
+
+Never automatically punish without the server owner enabling it.
+
+==================================================
+6. AUTOMOD
+==================================================
+
+Add:
+
+- Anti-spam
+- Anti-flood
+- Anti-mention spam
+- Anti-link
+- Anti-invite
+- Anti-caps
+- Anti-repeated messages
+- Bad word filter
+- Scam link detection
+- Raid protection
+
+Commands:
+
+/automod
+/automod enable
+/automod disable
+/automod settings
+/automod whitelist
+
+Allow channels and roles to be whitelisted.
+
+Add escalating punishments:
+
+- Delete
+- Warn
+- Timeout
+
+Add logs.
+
+==================================================
+7. ANTI-RAID / SECURITY
+==================================================
+
+Create a security system.
+
+Detect:
+
+- Many joins quickly
+- Many accounts joining
+- Bot raids
+- Mass mentions
+- Mass channel creation
+- Mass role creation
+- Mass bans
+- Mass kicks
+- Dangerous permission changes
+
+Add configurable protection.
+
+Commands:
+
+/security
+/security status
+/security setup
+/security lockdown
+/security unlock
+
+Add emergency lockdown button.
+
+==================================================
+8. LOGGING
+==================================================
+
+Create a very detailed logging system.
+
+Log:
+
+- Member join
+- Member leave
+- Member update
+- Nickname changes
+- Role changes
+- Role created
+- Role deleted
+- Channel created
+- Channel deleted
+- Channel updated
+- Message deleted
+- Message edited
+- Moderation
+- Ban
+- Kick
+- Timeout
+- Warning
+- Ticket
+- Giveaway
+- Application
+- Suggestion
+- Voice activity
+- Security events
+
+Use embeds.
+
+Allow different log channels per category.
+
+==================================================
+9. WELCOME / LEAVE
+==================================================
+
+Create a customizable welcome system.
+
+Features:
+
+- Welcome embed
+- Leave embed
+- Custom message
+- Avatar
+- Member count
+- Username
+- Server name
+- Server icon
+- Auto role
+- DM welcome
+- Custom images if configured
+
+Variables:
+
+{user}
+{username}
+{server}
+{membercount}
+{userid}
+
+Commands:
+
+/welcome setup
+/welcome test
+/welcome enable
+/welcome disable
+
+/leave setup
+/leave test
+/leave enable
+/leave disable
+
+==================================================
+10. GIVEAWAYS
+==================================================
+
+Build a full giveaway system.
+
+Commands:
+
+/giveaway create
+/giveaway end
+/giveaway reroll
+/giveaway cancel
+/giveaway list
+
+Support:
+
+- Prize
+- Duration
+- Winners
+- Required role
+- Minimum account age
+- Minimum server time
+- Bonus entries
+- Button participation
+- Automatic winner selection
+- Reroll
+- Logs
+
+Giveaways must survive bot restarts.
+
+==================================================
+11. APPLICATION SYSTEM
+==================================================
+
+Create applications.
+
+Types:
+
+- Moderator
+- Support
+- Developer
+- Designer
+- Builder
+- Scripter
+- QA Tester
+- Partnership
+- Custom
+
+Users can apply through buttons/forms.
+
+Create private application channels.
+
+Staff can:
+
+- Accept
+- Reject
+- Request more information
+
+Log decisions.
+
+==================================================
+12. SUGGESTIONS
+==================================================
+
+Create:
+
+/suggest
+
+Users submit suggestions.
+
+Buttons:
+
+👍 Upvote
+👎 Downvote
+
+Staff can:
+
+- Approve
+- Reject
+- Implement
+- Review
+
+Add suggestion logs.
+
+==================================================
+13. REPORT SYSTEM
+==================================================
+
+Create player/message reporting.
+
+Commands:
+
+/report
+
+Allow users to report another user.
+
+Create private report channels or send reports to a configured staff channel.
+
+Staff can:
+
+- Claim
+- Resolve
+- Reject
+- Add notes
+
+==================================================
+14. ROLE SYSTEM
+==================================================
+
+Create self roles.
+
+Support:
+
+- Button roles
+- Select menu roles
+- Reaction-style roles if practical
+- Age-independent safe roles
+- Game roles
+- Notification roles
+- Ping roles
+
+Commands:
+
+/roles
+/roles setup
+/roles add
+/roles remove
+/roles panel
+
+Add role menus.
+
+==================================================
+15. LEVEL / XP SYSTEM
+==================================================
+
+Optional configurable XP system.
+
+Users gain XP from chatting.
+
+Features:
+
+- Levels
+- XP requirements
+- Level-up messages
+- Role rewards
+- Leaderboard
+
+Commands:
+
+/level
+/rank
+/leaderboard
+/xp
+
+Prevent spam farming.
+
+==================================================
+16. ECONOMY
+==================================================
+
+Optional server economy.
+
+Currency name configurable.
+
+Commands:
+
+/balance
+/daily
+/work
+/pay
+/shop
+/buy
+/inventory
+/leaderboard
+
+Add configurable rewards.
+
+Make it completely optional.
+
+==================================================
+17. PROFILE SYSTEM
+==================================================
+
+Create server profiles.
+
+Command:
+
+/profile
+
+Show:
+
+- Username
+- Avatar
+- Join date
+- Level
+- XP
+- Warnings
+- Tickets
+- Economy balance
+- Roles
+
+Do not expose private information.
+
+==================================================
+18. STARBOARD
+==================================================
+
+Create a starboard.
+
+Users can react ⭐.
+
+When a message reaches the configured threshold, send it to the starboard.
+
+Commands:
+
+/starboard setup
+/starboard enable
+/starboard disable
+/starboard threshold
+
+==================================================
+19. ANNOUNCEMENTS
+==================================================
+
+Create an announcement builder.
+
+Command:
+
+/announce
+
+Support:
+
+- Title
+- Description
+- Color
+- Image
+- Thumbnail
+- Footer
+- Mention
+- Buttons where supported
+
+Preview before sending.
+
+==================================================
+20. VOICE SYSTEM
+==================================================
+
+Create advanced voice utilities.
+
+Features:
+
+- Join-to-create channels
+- Temporary voice channels
+- Voice waiting room
+- Auto-create channels
+- Rename temporary channels
+- User limit
+- Lock channel
+- Unlock channel
+- Move users
+- Mute
+- Deafen
+- Disconnect
+
+Commands:
+
+/voice setup
+/voice create
+/voice lock
+/voice unlock
+/voice rename
+/voice limit
+
+==================================================
+21. MUSIC SYSTEM
+==================================================
+
+If a reliable music implementation is available, add:
+
+/play
+/pause
+/resume
+/skip
+/stop
+/queue
+/nowplaying
+/volume
+/loop
+/shuffle
+
+Use buttons where possible.
+
+IMPORTANT:
+If an external music provider is required, make it modular and optional.
+
+Do not make the entire bot dependent on music.
+
+==================================================
+22. BOT INFORMATION
+==================================================
+
+Commands:
+
+/help
+/commands
+/botinfo
+/stats
+/ping
+/uptime
+/invite
+
+Create a beautiful help menu using categories.
+
+Example categories:
+
+🛡️ Moderation
+🎫 Tickets
+🎉 Giveaways
+🤖 AI
+📊 Utility
+🎮 Games
+🎙️ Voice
+⚙️ Administration
+
+Only show commands the user has permission to use where appropriate.
+
+==================================================
+23. UTILITY
+==================================================
+
+Add useful commands:
+
+/avatar
+/banner
+/userinfo
+/serverinfo
+/roleinfo
+/channelinfo
+/emojiinfo
+/permissions
+/firstmessage
+/remind
+/timer
+/poll
+/embed
+
+Add interactive buttons and select menus where useful.
+
+==================================================
+24. REMINDERS
+==================================================
+
+Create:
+
+/remind
+
+Examples:
+
+/remind 30m Drink water
+/remind 2h Check Discord
+/remind 1d Event starts
+
+Reminders must survive restarts.
+
+==================================================
+25. POLLS
+==================================================
+
+Create:
+
+/poll
+
+Support:
+
+- Question
+- Multiple options
+- Duration
+- Anonymous/non-anonymous if practical
+
+Use buttons/select menus.
+
+==================================================
+26. CUSTOM COMMANDS
+==================================================
+
+Allow server owners to create custom commands.
+
+Example:
+
+/customcommand add rules
+
+Response:
+"Please read #rules!"
+
+Support variables such as:
+
+{user}
+{username}
+{server}
+
+Commands:
+
+/customcommand add
+/customcommand remove
+/customcommand list
+
+==================================================
+27. FAQ SYSTEM
+==================================================
+
+Create a server FAQ.
+
+Admins can add questions and answers.
+
+Commands:
+
+/faq add
+/faq remove
+/faq list
+/faq search
+
+The AI assistant should optionally use the server FAQ when answering questions.
+
+==================================================
+28. SERVER RULES SYSTEM
+==================================================
+
+Create:
+
+/rules
+/rules setup
+/rules edit
+
+The AI assistant can answer questions based on the configured server rules.
+
+==================================================
+29. BUTTON / MENU BUILDER
+==================================================
+
+Create reusable interactive panels.
+
+Allow admins to configure:
+
+- Buttons
+- Select menus
+- Roles
+- Tickets
+- Links
+- Commands
+
+Make the system modular.
+
+==================================================
+30. CUSTOM EMBED BUILDER
+==================================================
+
+Create an embed builder.
+
+Support:
+
+- Title
+- Description
+- Color
+- Author
+- Footer
+- Image
+- Thumbnail
+- Fields
+- Timestamp
+
+Add preview before sending.
+
+==================================================
+31. DATABASE / STORAGE
+==================================================
+
+Create a reliable persistent storage system.
+
+Every guild must have isolated data.
+
+Store:
+
+- Guild settings
+- Tickets
+- Warnings
+- Applications
+- Giveaways
+- XP
+- Economy
+- Suggestions
+- Custom commands
+- AI settings
+- FAQ
+- Security settings
+- Logs
+- Reminders
+
+Do not lose data when the bot restarts.
+
+Make the storage system modular so it can later be moved to PostgreSQL or another database.
+
+==================================================
+32. BACKUP / RESTORE
+==================================================
+
+Create:
+
+/backup create
+/backup list
+/backup restore
+
+Backup configurable bot/server settings.
+
+Never include secrets or bot tokens in backups.
+
+==================================================
+33. BOT REINSTALL / RECOVERY
+==================================================
+
+This is VERY IMPORTANT.
+
+The bot should be able to recover gracefully if:
+
+- A configured channel was deleted
+- A configured category was deleted
+- A configured role was deleted
+- An emoji was deleted
+- A ticket category no longer exists
+- A log channel no longer exists
+- The bot lost permissions
+
+Do NOT crash.
+
+Instead:
+
+- Detect the problem
+- Log it
+- Tell administrators what needs to be fixed
+- Allow /setup wizard to repair it
+
+The bot should be easy to install on a new server.
+
+==================================================
+34. ERROR HANDLING
+==================================================
+
+Never let one command crash the entire bot.
+
+Add:
+
+- Global interaction error handler
+- Command error handler
+- Event error handler
+- Database error handling
+- API error handling
+- Permission error handling
+
+Send friendly error messages to users.
+
+Send technical errors to the configured developer/error log.
+
+Do not reveal tokens, API keys, stack traces, or secrets to normal users.
+
+==================================================
+35. COMMAND REGISTRATION
+==================================================
+
+Make sure slash commands are registered correctly.
+
+Support:
+
+- Global commands
+- Optional development guild commands for testing
+
+Avoid duplicate commands.
+
+==================================================
+36. DASHBOARD PREPARATION
+==================================================
+
+Structure the code so a web dashboard can be added later.
+
+Create clean service/config layers.
+
+Do not build a dashboard yet unless the existing architecture makes it easy.
+
+==================================================
+37. CUSTOM BOT PERSONALITY
+==================================================
+
+Allow the bot's name, color, footer and AI personality to be configured.
+
+Example:
+
+/bot settings
+
+Allow:
+
+- Bot name
+- Prefix if needed
+- Embed color
+- Footer
+- AI personality
+- AI channel
+- Language
+
+Default language should be English, but the bot should be able to respond in the user's language.
+
+==================================================
+38. MULTI-LANGUAGE SUPPORT
+==================================================
+
+Prepare translations for:
+
+- English
+- German
+
+Make all bot system messages use a translation system instead of hardcoded strings everywhere.
+
+Allow:
+
+/language
+
+Server language should be stored per guild.
+
+==================================================
+39. OWNER / DEVELOPER TOOLS
+==================================================
+
+Create owner-only developer commands.
+
+Examples:
+
+/dev status
+/dev guilds
+/dev reload
+/dev maintenance
+/dev logs
+/dev test
+
+Only configured bot owners can use these.
+
+Never expose sensitive information.
+
+==================================================
+40. PERFORMANCE
+==================================================
+
+The bot should be designed for multiple Discord servers.
+
+Avoid:
+
+- Massive unnecessary API calls
+- Infinite loops
+- Memory leaks
+- Unbounded caches
+- Excessive event processing
+
+Use cooldowns and rate limits.
+
+Do not block the event loop.
+
+==================================================
+41. UI / UX
+==================================================
+
+Make responses look professional.
+
+Use:
+
+- Embeds
+- Buttons
+- Select menus
+- Modals
+- Ephemeral replies where appropriate
+
+Keep messages readable.
+
+Do not spam channels unnecessarily.
+
+==================================================
+42. FINAL REQUIREMENTS
+==================================================
+
+Before finishing:
+
+1. Inspect the existing project.
+2. Reuse existing ticket architecture.
+3. Reuse existing store/configuration system.
+4. Do not remove working commands.
+5. Do not duplicate existing systems.
+6. Add missing modules cleanly.
+7. Keep /ping working.
+8. Run TypeScript type checking.
+9. Fix all errors.
+10. Make sure the bot can start even when optional integrations are not configured.
+11. Make sure all persistent systems survive restarts.
+12. Make sure each Discord server has isolated settings.
+13. Make sure deleted channels/roles/categories are handled safely.
+14. Make sure permission checks exist for every administrative command.
+15. Make sure secrets are never hardcoded.
+16. Make sure the bot can be invited to another Discord server and configured using /setup.
+17. Provide a final summary of what was changed.
+18. List any environment variables/API keys that are optional or required.
+19. Do not ask me to rebuild the bot from scratch.
+20. Preserve all existing functionality.
+
+MOST IMPORTANT:
+Build this incrementally and safely.
+Do not destroy the existing project.
+If a feature is too large to implement safely in one step, create the architecture/module for it and clearly report what remains instead of breaking existing functionality.

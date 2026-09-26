@@ -1,0 +1,76 @@
+Build the complete all-in-one Discord bot now. Implement ALL features from the previous specification, not just the architecture. Do not leave features as “ideas”, “planned”, “later”, “TODO”, placeholders, mock systems, or unfinished modules.
+Include everything:
+Complete /setup wizard + automatic configuration
+Full reinstall/new-server support
+Advanced tickets with all controls, types, roles, transcripts, claims, cooldowns, limits and auto-delete
+Full moderation
+Warnings
+AutoMod
+Anti-spam
+Anti-raid/security
+Complete logging
+Welcome/leave
+Auto-role
+Giveaways
+Applications
+Suggestions
+Reports
+Self roles
+XP/levels
+Economy
+Profiles
+Starboard
+Announcements
+Polls
+Reminders
+Custom commands
+FAQ
+Rules system
+Embed builder
+Button/select-menu panels
+Temporary voice channels
+Voice support system
+Music system
+AI /ask system
+AI channel
+AI conversation handling
+AI using the server FAQ/rules/configuration
+/help
+/botinfo
+/stats
+/uptime
+/invite
+Full utility commands
+Permission management
+Developer/owner tools
+Backup/restore
+Error handling
+Rate limits/cooldowns
+German + English localization
+Per-server configuration
+Persistent storage
+Recovery when channels, categories, roles or emojis are deleted
+Proper command registration
+Professional embeds/buttons/modals/select menus
+Architecture prepared for a web dashboard
+Every listed feature must actually work.
+Do not create placeholder commands that only reply “coming soon”.
+Do not remove or break any existing functionality.
+Keep /ping working.
+Keep the existing ticket architecture and improve it.
+Make every feature persistent across bot restarts.
+Make every guild completely independent.
+Make optional external integrations fail gracefully instead of crashing the bot.
+Never hardcode or expose tokens/API keys.
+After implementation:
+Run the TypeScript type check.
+Fix every error.
+Start the bot.
+Verify /ping.
+Verify command registration.
+Verify the setup system.
+Verify the ticket system.
+Verify that the bot can restart without losing configuration.
+Verify that a fresh/new Discord server can use /setup and configure the bot.
+Give a complete summary of every implemented feature and every required environment variable.
+Do not stop after creating the architecture. Implement the actual functionality now.

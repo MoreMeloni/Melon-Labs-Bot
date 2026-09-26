@@ -1,0 +1,173 @@
+MAX UPGRADE THE TICKET SYSTEM.
+
+Keep the existing /ping command and all currently working ticket functionality. Do not remove or break anything that already works.
+
+Make the ticket system highly customizable per Discord server.
+
+SETUP
+Improve /ticket setup into a proper configuration system. It should allow configuring:
+
+- Ticket category
+- Support role
+- Log channel
+- Ticket transcript channel
+- Ticket panel channel
+- Ticket name format
+- Maximum open tickets per member
+- Ticket cooldown
+- Staff roles
+- Ticket colors
+- Ticket panel title
+- Ticket panel description
+- Panel image/banner URL
+- Panel thumbnail URL
+- Footer text
+- Button labels
+- Button emojis
+- Button styles
+- Embed color
+- Welcome message
+- Ticket closing message
+
+Allow the configuration to be changed later without resetting everything.
+
+TICKET PANEL
+Create a beautiful Discord embed panel.
+
+The panel should support:
+- Custom title
+- Custom description
+- Custom image/banner
+- Custom thumbnail
+- Custom footer
+- Custom color
+- Custom emoji
+- Multiple ticket buttons
+- Different ticket types
+
+Example ticket types:
+- 🎫 Support
+- 🛠️ Bug Report
+- 📩 General Help
+- 💼 Partnership
+- 📝 Application
+- 🚨 Report
+
+Each ticket type should have its own category, support role, emoji, label and optional welcome message.
+
+BUTTONS
+Use Discord buttons with customizable:
+- Label
+- Emoji
+- Style
+- Ticket type
+
+TICKET CHANNELS
+When a ticket is opened:
+- Create a private channel
+- Give access to the ticket creator
+- Give access to configured support roles
+- Deny access to @everyone
+- Use a clean channel naming format
+- Send a professional welcome embed
+- Add ticket controls
+
+Ticket controls:
+- 🔒 Close
+- 🔓 Reopen
+- 🗑️ Delete
+- 👤 Add User
+- 🚫 Remove User
+- 📋 Claim
+- 📤 Transcript
+
+TICKET CLAIMING
+Add a claim system.
+
+A staff member can click Claim.
+Show who claimed the ticket.
+Allow staff to unclaim it.
+
+TRANSCRIPTS
+When closing a ticket:
+- Generate a transcript
+- Save the transcript
+- Send it to the configured transcript/log channel
+- Include ticket creator, opener, staff, timestamps and messages where possible
+
+CLOSING
+When closing:
+- Ask for an optional close reason
+- Show a confirmation button
+- Log who closed it
+- Log the reason
+- Offer transcript before deletion
+- Support automatic deletion after a configurable delay
+
+LOGGING
+Create detailed logs for:
+- Ticket created
+- Ticket claimed
+- Ticket unclaimed
+- User added
+- User removed
+- Ticket closed
+- Ticket reopened
+- Ticket deleted
+- Transcript created
+
+Use clean embeds with timestamps.
+
+CUSTOM EMOJIS
+Support custom Discord emoji IDs in:
+- Ticket buttons
+- Embeds
+- Status messages
+- Ticket types
+
+If a custom emoji is invalid or unavailable, automatically fall back to a normal Unicode emoji instead of crashing.
+
+PERMISSIONS
+Make all permission checks secure.
+Only the ticket owner and authorized staff should be able to use staff controls.
+Administrators should always be able to manage tickets.
+
+ANTI-SPAM
+Add:
+- Maximum open tickets per user
+- Cooldown
+- Prevent duplicate tickets
+- Proper error messages
+
+COMMANDS
+Keep the current commands and add useful commands such as:
+
+/ticket setup
+/ticket config
+/ticket panel
+/ticket create
+/ticket close
+/ticket reopen
+/ticket delete
+/ticket claim
+/ticket unclaim
+/ticket add
+/ticket remove
+/ticket transcript
+/ticket rename
+/ticket info
+
+CONFIGURATION
+All settings must be stored persistently per Discord server and survive bot restarts.
+
+UX
+Use professional embeds, buttons, select menus and clear error/success messages.
+
+IMPORTANT:
+- Do not remove /ping.
+- Do not break the existing ticket system.
+- Keep existing server configurations if possible.
+- Do not overwrite unrelated bot commands.
+- Keep the code organized and modular.
+- Run the full type check after the upgrade.
+- Restart the Discord bot after successful checks.
