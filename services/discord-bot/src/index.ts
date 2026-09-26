@@ -17,6 +17,19 @@ import { ticketCommand } from "./tickets/commands.js";
 import { restoreTicketDeletionTimers } from "./tickets/lifecycle.js";
 import { coreCommands } from "./core/commands.js";
 import { handleCoreCommand } from "./core/handler.js";
+import {
+  moderationCommands,
+  moderationCommandNames,
+} from "./moderation/commands.js";
+import { handleModerationCommand } from "./moderation/handler.js";
+import {
+  communityCommands,
+  communityCommandNames,
+} from "./community/commands.js";
+import {
+  handleCommunityCommand,
+  startReminderScheduler,
+} from "./community/handler.js";
 
 const token = process.env.DISCORD_TOKEN;
 
@@ -29,7 +42,13 @@ const pingCommand = new SlashCommandBuilder()
   .setName("ping")
   .setDescription("Check whether the bot is online.");
 
-const applicationCommands = [pingCommand, ...coreCommands, ticketCommand];
+const applicationCommands = [
+  pingCommand,
+  ...coreCommands,
+  ...moderationCommands,
+  ...communityCommands,
+  ticketCommand,
+];
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds],
@@ -149,6 +168,7 @@ client.once(Events.ClientReady, (readyClient) => {
   void restoreTicketDeletionTimers(readyClient).catch((error) => {
     console.error("Could not restore ticket deletion timers:", error);
   });
+  startReminderScheduler(readyClient);
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
@@ -164,6 +184,14 @@ client.on(Events.InteractionCreate, async (interaction) => {
       }
       if (coreCommands.some((command) => command.name === interaction.commandName)) {
         await handleCoreCommand(interaction);
+        return;
+      }
+      if (moderationCommandNames.has(interaction.commandName)) {
+        await handleModerationCommand(interaction);
+        return;
+      }
+      if (communityCommandNames.has(interaction.commandName)) {
+        await handleCommunityCommand(interaction);
       }
       return;
     }

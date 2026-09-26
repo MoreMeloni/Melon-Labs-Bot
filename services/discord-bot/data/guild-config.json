@@ -1,0 +1,18 @@
+{
+  "1532682274179645510": {
+    "guildId": "1532682274179645510",
+    "language": "en",
+    "botName": "Melon Labs",
+    "embedColor": "#5865F2",
+    "footerText": "Melon Labs",
+    "aiPersonality": "Helpful, concise, and respectful.",
+    "channels": {},
+    "roles": {
+      "staff": [],
+      "moderators": [],
+      "admins": []
+    },
+    "commandRoles": {},
+    "updatedAt": 1790437584839
+  }
+}
