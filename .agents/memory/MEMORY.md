@@ -1,1 +1,2 @@
 - [Discord command registration](discord-command-registration.md) — upsert managed commands individually to preserve commands owned elsewhere.
+- [Discord startup command sync](discord-startup-command-sync.md) — keep REST command updates backgrounded so a slow sync cannot block the gateway.

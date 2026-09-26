@@ -23,15 +23,32 @@ const token = process.env.DISCORD_TOKEN;
 if (!token) {
   throw new Error("Missing DISCORD_TOKEN. Add the bot token to Replit Secrets.");
 }
+const verifiedToken: string = token;
 
 const pingCommand = new SlashCommandBuilder()
   .setName("ping")
   .setDescription("Check whether the bot is online.");
 
-const applicationCommands = [pingCommand, ticketCommand, ...coreCommands];
+const applicationCommands = [pingCommand, ...coreCommands, ticketCommand];
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds],
+});
+
+client.on(Events.Debug, (message) => {
+  if (
+    message.includes("Connecting") ||
+    message.includes("Identifying") ||
+    message.includes("Ready")
+  ) {
+    console.info(`Discord gateway: ${message}`);
+  }
+});
+client.on(Events.Warn, (message) => {
+  console.warn(`Discord warning: ${message}`);
+});
+client.on(Events.Error, (error) => {
+  console.error("Discord client error:", error);
 });
 
 async function withTimeout<T>(
@@ -55,11 +72,10 @@ async function withTimeout<T>(
   }
 }
 
-client.once(Events.ClientReady, async (readyClient) => {
-  console.info(
-    `Discord gateway ready as ${readyClient.user.tag}; synchronizing ${applicationCommands.length} managed commands...`,
-  );
-  const rest = new REST({ version: "10" }).setToken(token);
+async function synchronizeApplicationCommands(
+  readyClient: Client<true>,
+): Promise<void> {
+  const rest = new REST({ version: "10" }).setToken(verifiedToken);
   const guildId = process.env.DISCORD_GUILD_ID;
   const commandRoute = guildId
     ? Routes.applicationGuildCommands(readyClient.user.id, guildId)
@@ -113,18 +129,26 @@ client.once(Events.ClientReady, async (readyClient) => {
     }
 
     console.info(
-      `Connected as ${readyClient.user.tag}; managed command sync finished with ${failedCommands} failure(s) ${
+      `Managed command sync finished with ${failedCommands} failure(s) ${
         guildId ? "for the development server" : "globally"
       }.`,
     );
-    await restoreTicketDeletionTimers(readyClient);
   } catch (error) {
     console.error(
-      "Could not read existing Discord slash commands; the bot will stay online and retry on the next restart:",
+      "Could not read existing Discord slash commands; the bot remains online and will retry on the next restart:",
       error,
     );
-    await restoreTicketDeletionTimers(readyClient);
   }
+}
+
+client.once(Events.ClientReady, (readyClient) => {
+  console.info(
+    `Connected to Discord as ${readyClient.user.tag}; bot is online. Synchronizing ${applicationCommands.length} managed commands in the background...`,
+  );
+  void synchronizeApplicationCommands(readyClient);
+  void restoreTicketDeletionTimers(readyClient).catch((error) => {
+    console.error("Could not restore ticket deletion timers:", error);
+  });
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
@@ -166,10 +190,40 @@ client.on(Events.InteractionCreate, async (interaction) => {
   }
 });
 
-client.login(token).catch((error: unknown) => {
-  console.error("Discord login failed. Check the DISCORD_TOKEN secret.", error);
+async function startDiscordClient(): Promise<void> {
+  for (let attempt = 1; attempt <= 3; attempt += 1) {
+    try {
+      await withTimeout(
+        client.login(verifiedToken),
+        `Discord login attempt ${attempt}`,
+        30_000,
+      );
+      if (!client.isReady()) {
+        await withTimeout(
+          new Promise<void>((resolve) => {
+            client.once(Events.ClientReady, () => resolve());
+          }),
+          `Discord READY attempt ${attempt}`,
+          15_000,
+        );
+      }
+      return;
+    } catch (error) {
+      console.error(`Discord connection attempt ${attempt} failed:`, error);
+      client.destroy();
+      if (attempt < 3) {
+        await new Promise((resolve) => setTimeout(resolve, 3_000));
+      }
+    }
+  }
+
+  console.error(
+    "Discord could not complete the gateway handshake after three attempts.",
+  );
   process.exitCode = 1;
-});
+}
+
+void startDiscordClient();
 
 const shutdown = () => {
   client.destroy();
